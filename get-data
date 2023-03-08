@@ -1,0 +1,1 @@
+copy(JSON.stringify(callTree.getRoots().map((root) => callTree.getNodeData(root))))
