@@ -8,9 +8,9 @@ const v8 = JSON.parse(fs.readFileSync("v8.json", "utf8"));
 const functionMap = {};
 
 for (const func of sm) {
-  const [smName, path] = func.funcName.split(" ");
+  const [smName, path] = func.funcName.split(" (");
   if (path) {
-    const smPath = normalizeSpidermonkeyPath(path);
+    const smPath = normalizeSpidermonkeyPath(path.slice(0, -1));
     functionMap[smPath] = { sm: func.total, smName, smPath };
   }
 }
@@ -42,7 +42,8 @@ console.log(
   "Diff".padStart(5),
   "SM".padStart(5),
   "V8".padStart(5),
-  "Factor".padStart(6),
+  "Factor".padStart(7),
+  "",
   "Name and path"
 );
 for (f of sortedFunctionMap) {
@@ -50,7 +51,8 @@ for (f of sortedFunctionMap) {
     `${f.diff}`.padStart(5),
     `${f.sm ?? "-"}`.padStart(5),
     `${f.v8 ?? "-"}`.padStart(5),
-    `${isNaN(f.sm / f.v8) ? "n/a" : (f.sm / f.v8).toFixed(2)}`.padStart(6),
+    `${isNaN(f.sm / f.v8) ? "n/a" : (f.sm / f.v8).toFixed(2)}`.padStart(7),
+    "",
     f.smName,
     f.v8Name,
     f.path
@@ -58,13 +60,17 @@ for (f of sortedFunctionMap) {
 }
 
 function normalizeSpidermonkeyPath(path) {
-  let p = path.slice(1, -1);
+  let p = path;
   p = p.replace(
     "/home/jrmuizel/src/Speedometer/resources/todomvc/architecture-examples/react/",
     ""
   );
   p = p.replace(
     "/home/jrmuizel/src/sps/Speedometer/resources/todomvc/architecture-examples/emberjs/dist/",
+    ""
+  );
+  p = p.replace(
+    "/home/jrmuizel/src/sps/Speedometer/resources/todomvc/architecture-examples/backbone/",
     ""
   );
   const [file, line, col] = p.split(":");
