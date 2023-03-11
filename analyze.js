@@ -1,3 +1,11 @@
+const PREFIX_PATHS = [
+  "/home/jrmuizel/src/sps/Speedometer/resources/todomvc/architecture-examples/preact/dist/",
+  "/home/jrmuizel/src/Speedometer/resources/todomvc/architecture-examples/react/",
+  "/home/jrmuizel/src/sps/Speedometer/resources/todomvc/architecture-examples/react/",
+  "/home/jrmuizel/src/sps/Speedometer/resources/todomvc/architecture-examples/emberjs/dist/",
+  "/home/jrmuizel/src/sps/Speedometer/resources/todomvc/architecture-examples/backbone/",
+];
+
 const fs = require("fs");
 
 // Load the sm.json and v8.json files
@@ -61,18 +69,10 @@ for (f of sortedFunctionMap) {
 
 function normalizeSpidermonkeyPath(path) {
   let p = path;
-  p = p.replace(
-    "/home/jrmuizel/src/Speedometer/resources/todomvc/architecture-examples/react/",
-    ""
-  );
-  p = p.replace(
-    "/home/jrmuizel/src/sps/Speedometer/resources/todomvc/architecture-examples/emberjs/dist/",
-    ""
-  );
-  p = p.replace(
-    "/home/jrmuizel/src/sps/Speedometer/resources/todomvc/architecture-examples/backbone/",
-    ""
-  );
+
+  for (const prefixPath of PREFIX_PATHS) {
+    p = p.replace(prefixPath, "");
+  }
   const [file, line, col] = p.split(":");
   const normalizedCol = +col + 1;
   return `${file}:${line}:${normalizedCol}`;
